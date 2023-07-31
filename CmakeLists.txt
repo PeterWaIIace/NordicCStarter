@@ -6,31 +6,31 @@ set(CMAKE_C_COMPILER    "${COMPILER_PATH}/bin/arm-none-eabi-gcc.exe ")
 set(CMAKE_CXX_COMPILER  "${COMPILER_PATH}/bin/arm-none-eabi-g++.exe")
 set(COMPILER_INCLUDE    "${COMPILER_PATH}/bin/arm-none-eabi/include")
 set(CMAKE_SYSTEM_NAME    Generic)
+set(CMAKE_SYSTEM_PROCESSOR "ARM")
+
 
 set(PROJECT_NAME     ble_app_blinky_pca10040e_s112)
-set(TARGETS          nrf52810_xxaa)
+set(TARGETS          nrf52840_xxaa)
 
 #fixes missing links to __exit __sbrk
 set(CMAKE_C_COMPILER_FORCED TRUE)
 set(CMAKE_CXX_COMPILER_FORCED TRUE)
 
 message(STATUS "compiler in use: ${CMAKE_C_COMPILER}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --specs=nosys.specs")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 # Setting SDK
 set(SDK_ROOT "C:/Users/Walas/Downloads/nrf5_sdk_17.1.0_ddde560/nRF5_SDK_17.1.0_ddde560")
 
 # Setting Linker
-# set(OUTPUT_DIRECTORY "/nrf52840_xxaa.out:")
+set(OUTPUT_DIRECTORY "/nrf52840_xxaa.out:")
 
 
-# # set(SDK_COMPONENTS "${PATH_INTERFACE_HEADERS}/components/")
-# # FILE(GLOB SDK_SOURCES "${PATH_INTERFACE_SOURCES}/*.cpp")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DAPP_TIMER_V2 -DAPP_TIMER_V2_RTC1_ENABLED -DBOARD_PCA10056 -DCONFIG_GPIO_AS_PINRESET -DFLOAT_ABI_HARD -DNRF52840_XXAA -DNRF_SD_BLE_API_VERSION=7 -DS140 -DSOFTDEVICE_PRESENT -mcpu=cortex-m4 -mthumb -mabi=aapcs -Wall -mfloat-abi=hard -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -fno-strict-aliasing  -fno-builtin -fshort-enums")
+set(CMAKE_C_FLAGS  "-DAPP_TIMER_V2 -DAPP_TIMER_V2_RTC1_ENABLED -DBOARD_PCA10056 -DCONFIG_GPIO_AS_PINRESET -DFLOAT_ABI_HARD -DNRF52840_XXAA -DNRF_SD_BLE_API_VERSION=7 -DS140 -DSOFTDEVICE_PRESENT -mcpu=cortex-m4 -mthumb -mabi=aapcs -Wall -Werror -mfloat-abi=hard -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -fshort-enums")
 
-set(CMAKE_ASM_FLAGS "-g3 -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfloat-abi=soft -DAPP_TIMER_V2 -DAPP_TIMER_V2_RTC1_ENABLED -DBOARD_PCA10040 -DCONFIG_GPIO_AS_PINRESET -DDEVELOP_IN_NRF52832 -DFLOAT_ABI_SOFT -DNRF52810_XXAA -DNRF52_PAN_74 -DNRFX_COREDEP_DELAY_US_LOOP_CYCLES=3 -DNRF_SD_BLE_API_VERSION=7 -DS112 -DSOFTDEVICE_PRESENT")
-
+set(CMAKE_ASM_FLAGS  "-g3 -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DAPP_TIMER_V2 -DAPP_TIMER_V2_RTC1_ENABLED -DBOARD_PCA10056 -DCONFIG_GPIO_AS_PINRESET -DFLOAT_ABI_HARD -DNRF52840_XXAA -DNRF_SD_BLE_API_VERSION=7 -DS140 -DSOFTDEVICE_PRESENT")
 set(LINKER_SCRIPT    "ble_app_blinky_gcc_nrf52.ld")
-set(LDFLAGS "${OPT} -mthumb -mabi=aapcs -L$(SDK_ROOT)/modules/nrfx/mdk -T$(LINKER_SCRIPT) -mcpu=cortex-m4 -Wl,--gc-sections --specs=nano.specs")
+set(LDFLAGS "-mthumb -mabi=aapcs -L${SDK_ROOT}/modules/nrfx/mdk -T${CMAKE_CURRENT_SOURCE_DIR}/${LINKER_SCRIPT} -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 --specs=nano.specs -Wl,--gc-sections")
+
 
 # include_directories(${SDK_COMPONENTS})
 
@@ -224,3 +224,5 @@ include_directories(LedDemo
     ${SDK_ROOT}/components/libraries/stack_guard
     ${SDK_ROOT}/components/libraries/log/src
 )
+
+target_link_libraries(LedDemo PRIVATE ${LDFLAGS})
